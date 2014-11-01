@@ -2,13 +2,14 @@ from core import Log
 
 from circuits import Component, Event, Timer
 import subprocess
+import time
 
 
 class load_alert(Event):
     """ Event raised when load is to high
     """
-    def __init__(self, load, load_max):
-        super(load_alert, self).__init__(load, load_max)
+    def __init__(self, load, load_max, timestamp):
+        super(load_alert, self).__init__(load, load_max, timestamp)
 
 
 class Module(Component):
@@ -23,7 +24,7 @@ class Module(Component):
 
         if avg >= self.max_avg:
             Log.warning('Average at %f (max: %d)' % (avg, self.max_avg))
-            self.fire(load_alert(avg, self.max_avg))
+            self.fire(load_alert(avg, self.max_avg, time.time()))
 
     def started(self, component):
         process_cmd = ['grep', '-c', '^processor', '/proc/cpuinfo']
