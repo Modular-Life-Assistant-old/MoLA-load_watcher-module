@@ -9,7 +9,7 @@ class load_alert(Event):
     """ Event raised when load is to high
     """
     def __init__(self, load, load_max, timestamp):
-        super(load_alert, self).__init__(load, load_max, timestamp)
+        super().__init__(load, load_max, timestamp)
 
 
 class Module(Component):
