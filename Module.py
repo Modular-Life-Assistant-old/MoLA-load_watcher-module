@@ -25,6 +25,14 @@ class Module(Component):
             self.fire(load_alert(avg, self.max_avg, time.time()))
 
     def started(self, c):
-        self.max_avg = os.cpu_count()
+        if hasattr(os, 'cpu_count'): # python 3.4 min
+            self.max_avg = os.cpu_count()
+
+        else:
+            import subprocess
+            process_cmd = ['grep', '-c', '^processor', '/proc/cpuinfo']
+            cpu_count = subprocess.check_output(process_cmd)
+            self.max_avg = int(cpu_count)
+
         load_avg_evt = Event.create('get_load_avg')
         Timer(self.delay, load_avg_evt, self.channel, persist=True).register(self)
